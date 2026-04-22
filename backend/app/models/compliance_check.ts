@@ -18,7 +18,7 @@ export default class ComplianceCheck extends BaseModel {
   @column()
   declare inputText: string
 
-  @column()
+  @column({ consume: (value) => Number(value) })
   declare toneScore: number
 
   @column({

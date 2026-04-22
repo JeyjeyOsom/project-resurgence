@@ -118,7 +118,7 @@ function scoreColor(score: number) {
                 scoreColor(
                   dashStore.recentChecks.length
                     ? Math.round(
-                        dashStore.recentChecks.reduce((s, c) => s + c.toneScore, 0) /
+                        dashStore.recentChecks.reduce((s, c) => s + Number(c.toneScore), 0) /
                           dashStore.recentChecks.length,
                       )
                     : 0,
@@ -128,7 +128,7 @@ function scoreColor(score: number) {
               {{
                 dashStore.recentChecks.length
                   ? Math.round(
-                      dashStore.recentChecks.reduce((s, c) => s + c.toneScore, 0) /
+                      dashStore.recentChecks.reduce((s, c) => s + Number(c.toneScore), 0) /
                         dashStore.recentChecks.length,
                     )
                   : '–'

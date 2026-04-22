@@ -28,7 +28,7 @@ export const useDashboardStore = defineStore('dashboard', () => {
         .reverse()
         .map((c, i) => ({
           label: `#${i + 1}`,
-          score: c.toneScore,
+          score: Number(c.toneScore),
         }))
     } catch (err) {
       error.value = (err as Error).message
