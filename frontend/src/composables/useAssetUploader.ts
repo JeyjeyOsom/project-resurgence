@@ -15,7 +15,7 @@ export function useAssetUploader(brandId: string, onUploaded: (asset: Asset) => 
     return 'other'
   }
 
-  async function uploadFile(file: File, tags: string[] = []) {
+  async function uploadFile(file: File, tags: string[] = []): Promise<boolean> {
     uploading.value = true
     try {
       const fd = new FormData()
@@ -24,8 +24,10 @@ export function useAssetUploader(brandId: string, onUploaded: (asset: Asset) => 
       fd.append('tags', JSON.stringify(tags))
       const asset = await assetsApi.upload(brandId, fd)
       onUploaded(asset)
+      return true
     } catch (err) {
       showToast((err as Error).message, 'error')
+      return false
     } finally {
       uploading.value = false
     }

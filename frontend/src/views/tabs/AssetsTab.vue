@@ -4,7 +4,7 @@ import { useRoute } from 'vue-router'
 import { useAssetManager } from '@/composables/useAssetManager'
 import { useAssetUploader } from '@/composables/useAssetUploader'
 import AssetCard from '@/components/AssetCard.vue'
-import FileUploadDropzone from '@/components/FileUploadDropzone.vue'
+import AssetUploadModal from '@/components/AssetUploadModal.vue'
 
 const props = defineProps<{ brandId?: string }>()
 const route = useRoute()
@@ -14,15 +14,11 @@ const { assets, loading, error, tagFilter, loadAssets, handleRemove, addAsset } 
   useAssetManager(brandId)
 const { uploading, uploadFile } = useAssetUploader(brandId, addAsset)
 
-const uploadTags = ref('')
+const showUploadModal = ref(false)
 
-function handleFileSelected(file: File) {
-  const tags = uploadTags.value
-    .split(',')
-    .map((t) => t.trim())
-    .filter((t) => t.length > 0)
-  uploadFile(file, tags)
-  uploadTags.value = ''
+async function handleModalSubmit(payload: { file: File; tags: string[] }) {
+  const success = await uploadFile(payload.file, payload.tags)
+  if (success) showUploadModal.value = false
 }
 
 function confirmRemove(id: string) {
@@ -34,18 +30,7 @@ onMounted(loadAssets)
 
 <template>
   <div>
-    <div class="mb-3">
-      <label class="block text-xs text-gray-500 mb-1">Tags for next upload (comma-separated)</label>
-      <input
-        v-model="uploadTags"
-        type="text"
-        placeholder="e.g. logo, dark-mode, web"
-        class="border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:ring-2 focus:ring-indigo-500 w-full"
-      />
-    </div>
-    <FileUploadDropzone :uploading="uploading" @file-selected="handleFileSelected" />
-
-    <!-- Filter bar -->
+    <!-- Toolbar -->
     <div class="flex items-center gap-3 mb-4">
       <input
         v-model="tagFilter"
@@ -60,7 +45,25 @@ onMounted(loadAssets)
       >
         Clear
       </button>
-      <span class="text-xs text-gray-400 ml-auto">{{ assets.length }} asset(s)</span>
+      <span class="text-xs text-gray-400">{{ assets.length }} asset(s)</span>
+      <button
+        class="ml-auto flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors"
+        @click="showUploadModal = true"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="w-4 h-4"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
+            clip-rule="evenodd"
+          />
+        </svg>
+        Add Asset
+      </button>
     </div>
 
     <!-- Error -->
@@ -80,7 +83,15 @@ onMounted(loadAssets)
     </div>
 
     <div v-else class="text-center py-16 text-gray-400 text-sm">
-      No assets uploaded yet. Drag & drop files above to get started.
+      No assets uploaded yet. Click <strong>Add Asset</strong> to get started.
     </div>
+
+    <!-- Upload modal -->
+    <AssetUploadModal
+      :visible="showUploadModal"
+      :uploading="uploading"
+      @close="showUploadModal = false"
+      @submit="handleModalSubmit"
+    />
   </div>
 </template>
