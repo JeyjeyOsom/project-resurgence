@@ -22,7 +22,6 @@ services:
       LOG_LEVEL: info
       APP_KEY: ${APP_KEY:-zKXHe-Ahdb7aPK1ylAJlRgTefktEaACi}
       APP_URL: http://localhost:3333
-      SESSION_DRIVER: cookie
       DB_HOST: database
       DB_PORT: 5432
       DB_USER: ${DB_USER:-postgres}

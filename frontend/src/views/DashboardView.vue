@@ -7,15 +7,13 @@ import {
   CategoryScale,
   LinearScale,
   BarElement,
-  Title,
   Tooltip,
-  Legend,
 } from 'chart.js'
 import { useBrandStore } from '@/stores/brand'
 import { useDashboardStore } from '@/stores/dashboard'
 import BrandSelector from '@/components/BrandSelector.vue'
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
+ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip)
 
 const brandStore = useBrandStore()
 const dashStore = useDashboardStore()

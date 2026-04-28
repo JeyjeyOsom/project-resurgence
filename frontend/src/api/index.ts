@@ -74,9 +74,6 @@ export const assetsApi = {
       })
       .then((r) => r.data),
 
-  update: (assetId: string, payload: { tags?: string[]; fileType?: string }) =>
-    client.put<Asset>(`/assets/${assetId}`, payload).then((r) => r.data),
-
   remove: (assetId: string) => client.delete(`/assets/${assetId}`),
 
   downloadUrl: (assetId: string) => `/api/assets/${assetId}/download`,
